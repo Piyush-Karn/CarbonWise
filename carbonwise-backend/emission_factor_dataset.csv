@@ -1,0 +1,21 @@
+Material	Material_type	Emission_Factor
+Polyethylene (PE)	Polymer (Thermoplastic)	1.9
+Polypropylene (PP)	Polymer (Thermoplastic)	1.7
+Polyvinyl Chloride (PVC) 	Polymer (Thermoplastic)	2.6
+Polystyrene (PS)	Polymer (Thermoplastic)	2.7
+Polyethylene Terephthalate (PET)	Polymer (Thermoplastic)	2.95
+Acrylic (PMMA)	Polymer (Thermoplastic)	4.4
+Polycarbonate (PC)         	Polymer (Thermoplastic)	5.2
+Nylon 6	Polymer (Thermoplastic)	4.7
+Nylon 66  	Polymer (Thermoplastic)	5.5
+Polyurethane (PU)	Polymer (Thermoplastic/Elastomer)	5.5
+Cellulose Acetate	Polymer (Biopolymer)	2.6
+Concrete	Mineral	0.13
+Cement	Mineral Binder	0.95
+Stainless Steel	Metal	1.9
+Aluminum	Metal	9
+Glass	Silicate	1
+Brick(Clay)	Ceramic	0.22
+Timber (softwood)	Wood	0.46
+Silicone	Polymer (Elastomer)	2.67
+

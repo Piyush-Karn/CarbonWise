@@ -1,212 +1,1625 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>CarbonWise</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <!-- Lucide Icons -->
-  <script src="https://unpkg.com/lucide@latest"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CarbonWise - Measure. Reduce. Offset.</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <style>
+        /* Custom CSS for CarbonWise */
+        :root {
+            --primary-green: #28a745;
+            --secondary-green: #20c997;
+            --light-green: #d4edda;
+            --dark-green: #155724;
+            --eco-gray: #6c757d;
+            --light-gray: #f8f9fa;
+            --white: #ffffff;
+        }
+
+        /* Global Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            overflow-x: hidden;
+        }
+
+        /* Smooth Scrolling */
+        html {
+            scroll-behavior: smooth;
+        }
+
+        /* Page Sections */
+        .page-section {
+            display: none;
+        }
+
+        .page-section.active {
+            display: block;
+        }
+
+        /* Navigation */
+        .navbar {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .navbar-brand {
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        .nav-link {
+            font-weight: 500;
+            transition: color 0.3s ease;
+            cursor: pointer;
+        }
+
+        .nav-link:hover {
+            color: var(--primary-green) !important;
+        }
+
+        .nav-link.active {
+            color: var(--primary-green) !important;
+            font-weight: 600;
+        }
+
+        /* Hero Section */
+        .hero-section {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            position: relative;
+        }
+
+        .hero-image {
+            text-align: center;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
+
+        /* Page Headers */
+        .page-header {
+            background: linear-gradient(135deg, var(--light-green) 0%, #ffffff 100%);
+            padding: 100px 0 50px;
+        }
+
+        /* Cards */
+        .feature-card, .value-card, .team-card {
+            border: none;
+            border-radius: 15px;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+        }
+
+        .feature-card:hover, .value-card:hover, .team-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+        }
+
+        /* Stats Section */
+        .stats-section {
+            background: var(--light-gray);
+        }
+
+        .counter {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--primary-green);
+        }
+
+        /* Testimonials */
+        .testimonials-section {
+            background: var(--light-gray);
+        }
+
+        .testimonial-card {
+            background: var(--white);
+            padding: 3rem;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .testimonial-author h6 {
+            color: var(--dark-green);
+        }
+
+        .carousel-control-prev, .carousel-control-next {
+            width: 5%;
+        }
+
+        .carousel-control-prev i, .carousel-control-next i {
+            font-size: 1.5rem;
+        }
+
+        /* CTA Section */
+        .cta-section {
+            background: linear-gradient(135deg, var(--primary-green) 0%, var(--secondary-green) 100%);
+        }
+
+        /* Feature Details */
+        .feature-detail {
+            padding: 2rem 0;
+        }
+
+        .feature-detail ul li {
+            padding: 0.5rem 0;
+        }
+
+        /* Timeline */
+        .timeline {
+            position: relative;
+            padding-left: 3rem;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 20px;
+            top: 0;
+            height: 100%;
+            width: 2px;
+            background: var(--primary-green);
+        }
+
+        .timeline-item {
+            position: relative;
+            margin-bottom: 3rem;
+            padding-left: 3rem;
+        }
+
+        .timeline-marker {
+            position: absolute;
+            left: -30px;
+            top: 0;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            border: 3px solid var(--white);
+            box-shadow: 0 0 0 3px var(--primary-green);
+        }
+
+        .timeline-date {
+            color: var(--primary-green);
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.9rem;
+        }
+
+        .timeline-content {
+            background: var(--white);
+            padding: 1.5rem;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Team Section */
+        .team-avatar {
+            margin-bottom: 1rem;
+        }
+
+        .team-card .social-links a {
+            color: var(--eco-gray);
+            margin: 0 0.5rem;
+            transition: color 0.3s ease;
+        }
+
+        .team-card .social-links a:hover {
+            color: var(--primary-green);
+        }
+
+        /* Contact Page */
+        .contact-info-card {
+            padding: 2rem;
+        }
+
+        .map-container {
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .office-hours {
+            background: var(--light-gray);
+            padding: 1.5rem;
+            border-radius: 10px;
+        }
+
+        .newsletter-section {
+            background: var(--light-green);
+            padding: 3rem;
+            border-radius: 15px;
+        }
+
+        .social-media-links {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .social-link {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-decoration: none;
+            color: var(--eco-gray);
+            transition: all 0.3s ease;
+            padding: 1rem;
+            border-radius: 10px;
+        }
+
+        .social-link:hover {
+            color: var(--primary-green);
+            background: var(--light-green);
+            text-decoration: none;
+        }
+
+        .social-link i {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        /* Form Styles */
+        .form-control:focus {
+            border-color: var(--primary-green);
+            box-shadow: 0 0 0 0.2rem rgba(40, 167, 69, 0.25);
+        }
+
+        .btn-success {
+            background-color: var(--primary-green);
+            border-color: var(--primary-green);
+        }
+
+        .btn-success:hover {
+            background-color: var(--dark-green);
+            border-color: var(--dark-green);
+        }
+
+        .btn-outline-success {
+            color: var(--primary-green);
+            border-color: var(--primary-green);
+        }
+
+        .btn-outline-success:hover {
+            background-color: var(--primary-green);
+            border-color: var(--primary-green);
+        }
+
+        /* Footer */
+        .footer {
+            background: #2c3e50;
+            color: var(--white);
+        }
+
+        .footer h5, .footer h6 {
+            color: var(--white);
+        }
+
+        .footer .social-links a {
+            color: var(--eco-gray);
+            font-size: 1.2rem;
+            transition: color 0.3s ease;
+        }
+
+        .footer .social-links a:hover {
+            color: var(--primary-green);
+        }
+
+        .footer a {
+            color: var(--eco-gray);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer a:hover {
+            color: var(--white);
+        }
+
+        /* Charts */
+        canvas {
+            max-height: 300px;
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translate3d(0, 40px, 0);
+            }
+            to {
+                opacity: 1;
+                transform: translate3d(0, 0, 0);
+            }
+        }
+
+        .fade-in-up {
+            animation: fadeInUp 0.8s ease;
+        }
+
+        /* Loading Animation */
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: var(--white);
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Success Message */
+        .alert-success {
+            background-color: var(--light-green);
+            border-color: var(--primary-green);
+            color: var(--dark-green);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .hero-section {
+                min-height: 80vh;
+                text-align: center;
+            }
+            
+            .timeline {
+                padding-left: 2rem;
+            }
+            
+            .timeline-item {
+                padding-left: 2rem;
+            }
+            
+            .timeline-marker {
+                left: -25px;
+            }
+            
+            .social-media-links {
+                gap: 1rem;
+            }
+            
+            .display-4 {
+                font-size: 2.5rem;
+            }
+            
+            .display-5 {
+                font-size: 2rem;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .timeline::before {
+                left: 15px;
+            }
+            
+            .timeline-marker {
+                left: -30px;
+                width: 15px;
+                height: 15px;
+            }
+            
+            .navbar-brand {
+                font-size: 1.2rem;
+            }
+            
+            .btn-lg {
+                padding: 0.75rem 1.5rem;
+                font-size: 1rem;
+            }
+        }
+    </style>
 </head>
-<body class="min-h-screen w-full bg-white relative">
-
-  <!-- Amber Glow Background -->
-  <div class="absolute inset-0 z-0"
-    style="background-image: radial-gradient(125% 125% at 50% 90%, #ffffff 40%, #f59e0b 100%); background-size: 100% 100%;">
-  </div>
-
-  <div class="relative z-10">
-    <!-- Header -->
-    <header class="relative z-10 px-6 py-4">
-      <nav class="max-w-7xl mx-auto flex items-center justify-between">
-        <div class="flex items-center space-x-2 group cursor-pointer hover:scale-105 transition-transform duration-300">
-          <i data-lucide="leaf" class="w-8 h-8 text-emerald-600"></i>
-          <span class="text-2xl font-bold bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent">
-            CarbonWise
-          </span>
-        </div>
-      </nav>
-    </header>
-
-    <!-- Main Content -->
-    <main class="relative z-10">
-      <div class="relative z-10 max-w-7xl mx-auto px-6 py-20">
-        <div class="text-center mb-16">
-          <h1 class="text-5xl md:text-7xl font-bold mb-6 leading-tight">
-            <span class="bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 bg-clip-text text-transparent">
-              Shop Smarter, 
-            </span>
-            <span class="bg-gradient-to-r from-emerald-600 via-teal-600 to-cyan-600 bg-clip-text text-transparent">
-              Planet Happier
-            </span>
-          </h1>
-
-          <p class="text-xl text-gray-600 mb-12 max-w-3xl mx-auto leading-relaxed">
-            Discover the hidden carbon footprint of your online purchases. Get AI-powered green recommendations.
-          </p>
-
-          <!-- URL Input Section -->
-          <div class="max-w-2xl mx-auto mb-16">
-            <div class="bg-white/80 backdrop-blur-lg rounded-2xl p-8 shadow-2xl border border-white/20">
-              <h2 class="text-2xl font-bold text-gray-800 mb-6">
-                Check Any Product's Carbon Impact
-              </h2>
-              <div class="flex flex-col sm:flex-row gap-4">
-                <div class="flex-1">
-                  <input id="urlInput" type="url"
-                    placeholder="Paste Amazon product URL here..."
-                    class="w-full px-6 py-4 rounded-xl border-2 border-gray-200 focus:border-emerald-500 focus:outline-none transition-all duration-300 text-gray-700 bg-white/90"/>
-                </div>
-                <button id="analyzeBtn"
-                  class="px-8 py-4 bg-gradient-to-r from-emerald-600 to-teal-600 text-white rounded-xl font-semibold flex items-center justify-center space-x-2">
-                  <i data-lucide="search" class="w-5 h-5"></i>
-                  <span>Analyze Impact</span>
-                </button>
-              </div>
-
-              <!-- Loading Progress -->
-              <div id="progressSection" class="hidden mt-6 space-y-4">
-                <div class="flex justify-between text-sm text-gray-600">
-                  <span>Analyzing product...</span>
-                  <span id="progressText">0%</span>
-                </div>
-                <div class="w-full bg-gray-200 rounded-full h-2">
-                  <div id="progressBar" class="h-2 bg-gradient-to-r from-emerald-500 to-teal-500 rounded-full transition-all duration-300"
-                    style="width: 0%;">
-                  </div>
-                </div>
-              </div>
-
-              <!-- Results -->
-              <div id="resultSection" class="hidden mt-8 p-6 bg-gradient-to-r from-red-50 to-orange-50 rounded-xl border border-red-200">
-                <div class="flex items-center justify-between mb-4">
-                  <div class="flex-1">
-                    <p class="text-sm text-gray-600 mb-1">Analysis Complete:</p>
-                    <div class="flex items-start space-x-3">
-                      <img id="resultImage" src="" alt="" class="w-16 h-16 object-cover rounded-lg border hidden"/>
-                      <div>
-                        <p id="resultProduct" class="font-semibold text-gray-800 mb-1"></p>
-                        <p id="resultMaterial" class="text-xs text-blue-600 mb-1"></p>
-                        <p id="resultWeight" class="text-xs text-purple-600"></p>
-                      </div>
-                    </div>
-                    <p id="resultRecommendation" class="text-xs text-emerald-600 mt-2"></p>
-                  </div>
-                  <div class="text-right">
-                    <p id="resultCarbon" class="text-2xl font-bold text-red-600"></p>
-                    <p class="text-sm text-gray-600">Carbon footprint</p>
-                  </div>
-                </div>
-              </div>
-
-              <!-- Error Display -->
-              <div id="errorSection" class="hidden mt-8 p-6 bg-red-50 rounded-xl border border-red-200">
-                <div class="flex items-center space-x-3">
-                  <div class="w-8 h-8 bg-red-500 rounded-full flex items-center justify-center">
-                    <span class="text-white text-sm font-bold">!</span>
-                  </div>
-                  <div>
-                    <p class="font-semibold text-red-800">Analysis Failed</p>
-                    <p id="errorMessage" class="text-sm text-red-600"></p>
-                  </div>
-                </div>
-              </div>
-
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-light fixed-top">
+        <div class="container">
+            <a class="navbar-brand fw-bold" href="#" onclick="showPage('home')">
+                <i class="fas fa-leaf text-success me-2"></i>CarbonWise
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link active" href="#" onclick="showPage('home')">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#" onclick="showPage('features')">Features</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#" onclick="showPage('about')">About</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#" onclick="showPage('contact')">Contact</a></li>
+                    <li class="nav-item"><a class="btn btn-success ms-2 text-white" href="#" onclick="showPage('features')">Try Calculator</a></li>
+                </ul>
             </div>
-          </div>
         </div>
-      </div>
-    </main>
-  </div>
+    </nav>
 
-  <!-- Script -->
-  <script>
-    lucide.createIcons();
+    <!-- HOME PAGE -->
+    <div id="home" class="page-section active">
+        <!-- Hero Section -->
+        <section id="hero" class="hero-section d-flex align-items-center">
+            <div class="container">
+                <div class="row align-items-center">
+                    <div class="col-lg-6" data-aos="fade-right">
+                        <h1 class="display-4 fw-bold mb-4">
+                            <span class="text-success">Measure.</span> 
+                            <span class="text-warning">Reduce.</span> 
+                            <span class="text-primary">Offset.</span>
+                        </h1>
+                        <p class="lead mb-4">Track your carbon footprint, discover sustainable alternatives, and make a positive impact on our planet with data-driven insights.</p>
+                        <div class="d-flex flex-wrap gap-3">
+                            <a href="#" onclick="showPage('features')" class="btn btn-success btn-lg">Try Calculator</a>
+                            <a href="#features" class="btn btn-outline-success btn-lg">Learn More</a>
+                        </div>
+                    </div>
+                    <div class="col-lg-6" data-aos="fade-left">
+                        <div class="hero-image">
+                            <i class="fas fa-globe-americas display-1 text-success opacity-75"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
 
-    const API_BASE_URL = "http://localhost:8000";
-    const urlInput = document.getElementById("urlInput");
-    const analyzeBtn = document.getElementById("analyzeBtn");
-    const progressSection = document.getElementById("progressSection");
-    const progressText = document.getElementById("progressText");
-    const progressBar = document.getElementById("progressBar");
-    const resultSection = document.getElementById("resultSection");
-    const errorSection = document.getElementById("errorSection");
-    const resultImage = document.getElementById("resultImage");
-    const resultProduct = document.getElementById("resultProduct");
-    const resultMaterial = document.getElementById("resultMaterial");
-    const resultWeight = document.getElementById("resultWeight");
-    const resultRecommendation = document.getElementById("resultRecommendation");
-    const resultCarbon = document.getElementById("resultCarbon");
-    const errorMessage = document.getElementById("errorMessage");
+        <!-- Stats Counter -->
+        <section class="stats-section py-5 bg-light">
+            <div class="container">
+                <div class="row text-center">
+                    <div class="col-md-3 mb-4" data-aos="fade-up" data-aos-delay="100">
+                        <i class="fas fa-users fa-3x text-success mb-3"></i>
+                        <h3 class="counter" data-target="25000">0</h3>
+                        <p class="text-muted">Active Users</p>
+                    </div>
+                    <div class="col-md-3 mb-4" data-aos="fade-up" data-aos-delay="200">
+                        <i class="fas fa-leaf fa-3x text-success mb-3"></i>
+                        <h3><span class="counter" data-target="150000">0</span>+ kg</h3>
+                        <p class="text-muted">CO₂ Saved</p>
+                    </div>
+                    <div class="col-md-3 mb-4" data-aos="fade-up" data-aos-delay="300">
+                        <i class="fas fa-chart-line fa-3x text-success mb-3"></i>
+                        <h3 class="counter" data-target="500">0</h3>
+                        <p class="text-muted">Companies Tracking</p>
+                    </div>
+                    <div class="col-md-3 mb-4" data-aos="fade-up" data-aos-delay="400">
+                        <i class="fas fa-tree fa-3x text-success mb-3"></i>
+                        <h3 class="counter" data-target="75000">0</h3>
+                        <p class="text-muted">Trees Planted</p>
+                    </div>
+                </div>
+            </div>
+        </section>
 
-    analyzeBtn.addEventListener("click", async () => {
-      const url = urlInput.value.trim();
-      if (!url) return;
+        <!-- Features Section -->
+        <section id="features" class="py-5">
+            <div class="container">
+                <div class="row mb-5">
+                    <div class="col-lg-8 mx-auto text-center">
+                        <h2 class="display-5 fw-bold mb-3" data-aos="fade-up">Why Choose CarbonWise?</h2>
+                        <p class="lead text-muted" data-aos="fade-up" data-aos-delay="100">Comprehensive carbon tracking tools designed for individuals and businesses</p>
+                    </div>
+                </div>
+                <div class="row g-4">
+                    <div class="col-lg-4" data-aos="fade-up" data-aos-delay="100">
+                        <div class="card feature-card h-100">
+                            <div class="card-body text-center p-4">
+                                <i class="fas fa-calculator fa-3x text-success mb-3"></i>
+                                <h5 class="card-title">Carbon Calculator</h5>
+                                <p class="card-text">Instantly calculate your carbon footprint across transportation, energy, and lifestyle choices with our advanced algorithms.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4" data-aos="fade-up" data-aos-delay="200">
+                        <div class="card feature-card h-100">
+                            <div class="card-body text-center p-4">
+                                <i class="fas fa-lightbulb fa-3x text-warning mb-3"></i>
+                                <h5 class="card-title">Sustainable Insights</h5>
+                                <p class="card-text">Get personalized recommendations to reduce your environmental impact with actionable sustainability tips.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4" data-aos="fade-up" data-aos-delay="300">
+                        <div class="card feature-card h-100">
+                            <div class="card-body text-center p-4">
+                                <i class="fas fa-chart-pie fa-3x text-primary mb-3"></i>
+                                <h5 class="card-title">Eco Data Visuals</h5>
+                                <p class="card-text">Visualize your progress with interactive charts and reports that make sustainability tracking engaging and clear.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
 
-      progressSection.classList.remove("hidden");
-      resultSection.classList.add("hidden");
-      errorSection.classList.add("hidden");
-      progressBar.style.width = "0%";
-      progressText.textContent = "0%";
+        <!-- Testimonials -->
+        <section class="testimonials-section py-5 bg-light">
+            <div class="container">
+                <div class="row mb-5">
+                    <div class="col-lg-8 mx-auto text-center">
+                        <h2 class="display-5 fw-bold mb-3" data-aos="fade-up">What Our Users Say</h2>
+                    </div>
+                </div>
+                <div id="testimonialCarousel" class="carousel slide" data-bs-ride="carousel">
+                    <div class="carousel-inner">
+                        <div class="carousel-item active">
+                            <div class="row justify-content-center">
+                                <div class="col-lg-8">
+                                    <div class="testimonial-card text-center">
+                                        <i class="fas fa-quote-left fa-2x text-success mb-3"></i>
+                                        <p class="lead">"CarbonWise helped our company reduce emissions by 30% in just 6 months. The insights are incredibly actionable."</p>
+                                        <div class="testimonial-author">
+                                            <h6 class="mb-0">Sarah Johnson</h6>
+                                            <small class="text-muted">Sustainability Manager, GreenTech Corp</small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="carousel-item">
+                            <div class="row justify-content-center">
+                                <div class="col-lg-8">
+                                    <div class="testimonial-card text-center">
+                                        <i class="fas fa-quote-left fa-2x text-success mb-3"></i>
+                                        <p class="lead">"The carbon calculator is so easy to use, and I love tracking my progress. It's made me much more conscious of my choices."</p>
+                                        <div class="testimonial-author">
+                                            <h6 class="mb-0">Michael Chen</h6>
+                                            <small class="text-muted">Environmental Enthusiast</small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="carousel-item">
+                            <div class="row justify-content-center">
+                                <div class="col-lg-8">
+                                    <div class="testimonial-card text-center">
+                                        <i class="fas fa-quote-left fa-2x text-success mb-3"></i>
+                                        <p class="lead">"Amazing platform! The data visualizations help us communicate our sustainability efforts to stakeholders effectively."</p>
+                                        <div class="testimonial-author">
+                                            <h6 class="mb-0">Emma Rodriguez</h6>
+                                            <small class="text-muted">CEO, EcoSolutions Inc</small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <button class="carousel-control-prev" type="button" data-bs-target="#testimonialCarousel" data-bs-slide="prev">
+                        <i class="fas fa-chevron-left text-success"></i>
+                    </button>
+                    <button class="carousel-control-next" type="button" data-bs-target="#testimonialCarousel" data-bs-slide="next">
+                        <i class="fas fa-chevron-right text-success"></i>
+                    </button>
+                </div>
+            </div>
+        </section>
 
-      let progress = 0;
-      const progressInterval = setInterval(() => {
-        progress = Math.min(progress + Math.random() * 15, 85);
-        progressBar.style.width = progress + "%";
-        progressText.textContent = Math.round(progress) + "%";
-      }, 300);
+        <!-- CTA Section -->
+        <section id="calculator" class="cta-section py-5">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-8 mx-auto text-center text-white">
+                        <h2 class="display-5 fw-bold mb-3" data-aos="fade-up">Ready to Make a Difference?</h2>
+                        <p class="lead mb-4" data-aos="fade-up" data-aos-delay="100">Start tracking your carbon footprint today and join thousands making a positive environmental impact.</p>
+                        <div class="d-flex flex-wrap gap-3 justify-content-center" data-aos="fade-up" data-aos-delay="200">
+                            <a href="#" onclick="showPage('features')" class="btn btn-light btn-lg">Get Started Free</a>
+                            <a href="#" onclick="showPage('contact')" class="btn btn-outline-light btn-lg">Contact Sales</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
 
-      try {
-        const response = await fetch(`${API_BASE_URL}/analyze`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ url })
+    <!-- FEATURES PAGE -->
+    <div id="features" class="page-section">
+        <!-- Page Header -->
+        <section class="page-header py-5 mt-5">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-8 mx-auto text-center">
+                        <h1 class="display-4 fw-bold mb-3" data-aos="fade-up">Powerful Features</h1>
+                        <p class="lead text-muted" data-aos="fade-up" data-aos-delay="100">Everything you need to track, analyze, and reduce your carbon footprint</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Detailed Features -->
+        <section class="py-5">
+            <div class="container">
+                <div class="row g-5">
+                    <div class="col-lg-6" data-aos="fade-right">
+                        <div class="feature-detail">
+                            <i class="fas fa-calculator fa-3x text-success mb-4"></i>
+                            <h3 class="fw-bold mb-3">Advanced Carbon Calculator</h3>
+                            <p class="text-muted mb-4">Our comprehensive calculator analyzes multiple data points to provide accurate carbon footprint measurements across all aspects of your lifestyle and business operations.</p>
+                            <ul class="list-unstyled">
+                                <li><i class="fas fa-check text-success me-2"></i> Transportation emissions tracking</li>
+                                <li><i class="fas fa-check text-success me-2"></i> Energy consumption analysis</li>
+                                <li><i class="fas fa-check text-success me-2"></i> Supply chain impact assessment</li>
+                                <li><i class="fas fa-check text-success me-2"></i> Real-time data processing</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="col-lg-6" data-aos="fade-left">
+                        <div class="feature-detail">
+                            <i class="fas fa-chart-line fa-3x text-primary mb-4"></i>
+                            <h3 class="fw-bold mb-3">Smart Analytics Dashboard</h3>
+                            <p class="text-muted mb-4">Visualize your carbon data with interactive charts and get actionable insights to make informed decisions about your environmental impact.</p>
+                            <ul class="list-unstyled">
+                                <li><i class="fas fa-check text-success me-2"></i> Interactive data visualizations</li>
+                                <li><i class="fas fa-check text-success me-2"></i> Trend analysis and forecasting</li>
+                                <li><i class="fas fa-check text-success me-2"></i> Custom reporting tools</li>
+                                <li><i class="fas fa-check text-success me-2"></i> Goal tracking and alerts</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="col-lg-6" data-aos="fade-right">
+                        <div class="feature-detail">
+                            <i class="fas fa-lightbulb fa-3x text-warning mb-4"></i>
+                            <h3 class="fw-bold mb-3">AI-Powered Recommendations</h3>
+                            <p class="text-muted mb-4">Get personalized suggestions to reduce your carbon footprint based on your usage patterns and sustainability goals.</p>
+                            <ul class="list-unstyled">
+                                <li><i class="fas fa-check text-success me-2"></i> Personalized action plans</li>
+                                <li><i class="fas fa-check text-success me-2"></i> Cost-benefit analysis</li>
+                                <li><i class="fas fa-check text-success me-2"></i> Impact predictions</li>
+                                <li><i class="fas fa-check text-success me-2"></i> Progress tracking</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="col-lg-6" data-aos="fade-left">
+                        <div class="feature-detail">
+                            <i class="fas fa-users fa-3x text-info mb-4"></i>
+                            <h3 class="fw-bold mb-3">Team Collaboration</h3>
+                            <p class="text-muted mb-4">Enable your entire organization to participate in sustainability efforts with collaborative tools and shared dashboards.</p>
+                            <ul class="list-unstyled">
+                                <li><i class="fas fa-check text-success me-2"></i> Multi-user workspaces</li>
+                                <li><i class="fas fa-check text-success me-2"></i> Role-based permissions</li>
+                                <li><i class="fas fa-check text-success me-2"></i> Shared goals and challenges</li>
+                                <li><i class="fas fa-check text-success me-2"></i> Team performance metrics</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Interactive Demo -->
+        <section id="demo" class="py-5 bg-light">
+            <div class="container">
+                <div class="row mb-5">
+                    <div class="col-lg-8 mx-auto text-center">
+                        <h2 class="display-5 fw-bold mb-3" data-aos="fade-up">Try Our Carbon Calculator</h2>
+                        <p class="lead text-muted" data-aos="fade-up" data-aos-delay="100">Enter a product to see its estimated carbon footprint</p>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-6 mx-auto">
+                        <div class="card shadow" data-aos="fade-up">
+                            <div class="card-body p-4">
+                                <div class="mb-3">
+                                    <label for="productInput" class="form-label fw-bold">Enter a product:</label>
+                                    <input type="text" class="form-control" id="productInput" placeholder="e.g., plastic chair, cotton t-shirt, laptop">
+                                </div>
+                                <button type="button" class="btn btn-success w-100" onclick="calculateCarbon()">
+                                    <i class="fas fa-calculator me-2"></i>Calculate Carbon Footprint
+                                </button>
+                                <div id="carbonResult" class="mt-4 text-center" style="display: none;">
+                                    <div class="alert alert-success">
+                                        <i class="fas fa-leaf fa-2x mb-2"></i>
+                                        <h5 class="mb-2">Estimated Carbon Footprint</h5>
+                                        <p class="mb-0"><span id="carbonValue"></span> kg CO₂</p>
+                                    </div>
+                                    <small class="text-muted">*This is a demo calculation for illustration purposes</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Charts Section -->
+        <section class="py-5">
+            <div class="container">
+                <div class="row mb-5">
+                    <div class="col-lg-8 mx-auto text-center">
+                        <h2 class="display-5 fw-bold mb-3" data-aos="fade-up">Sustainability Impact Visualization</h2>
+                        <p class="lead text-muted" data-aos="fade-up" data-aos-delay="100">See how our platform helps track and reduce carbon emissions</p>
+                    </div>
+                </div>
+                <div class="row g-4">
+                    <div class="col-lg-6" data-aos="fade-up">
+                        <div class="card h-100">
+                            <div class="card-body">
+                                <h5 class="card-title text-center mb-4">Carbon Emissions by Category</h5>
+                                <canvas id="emissionsChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6" data-aos="fade-up" data-aos-delay="100">
+                        <div class="card h-100">
+                            <div class="card-body">
+                                <h5 class="card-title text-center mb-4">Reduction Progress Over Time</h5>
+                                <canvas id="progressChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- ABOUT PAGE -->
+    <div id="about" class="page-section">
+        <!-- Page Header -->
+        <section class="page-header py-5 mt-5">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-8 mx-auto text-center">
+                        <h1 class="display-4 fw-bold mb-3" data-aos="fade-up">About CarbonWise</h1>
+                        <p class="lead text-muted" data-aos="fade-up" data-aos-delay="100">Empowering individuals and businesses to make informed decisions for a sustainable future</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Mission & Vision -->
+        <section class="py-5">
+            <div class="container">
+                <div class="row g-5 align-items-center">
+                    <div class="col-lg-6" data-aos="fade-right">
+                        <h2 class="display-5 fw-bold mb-4">Our Mission</h2>
+                        <p class="lead mb-4">To democratize carbon tracking and make sustainability accessible to everyone through innovative technology and data-driven insights.</p>
+                        <p class="text-muted">We believe that knowledge is power. By providing accurate, real-time carbon footprint data and actionable recommendations, we empower individuals and organizations to make meaningful changes that benefit our planet.</p>
+                    </div>
+                    <div class="col-lg-6" data-aos="fade-left">
+                        <div class="mission-icon text-center">
+                            <i class="fas fa-globe-americas display-1 text-success opacity-75"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Values Section -->
+        <section class="py-5 bg-light">
+            <div class="container">
+                <div class="row mb-5">
+                    <div class="col-lg-8 mx-auto text-center">
+                        <h2 class="display-5 fw-bold mb-3" data-aos="fade-up">Our Values</h2>
+                        <p class="lead text-muted" data-aos="fade-up" data-aos-delay="100">The principles that guide everything we do</p>
+                    </div>
+                </div>
+                <div class="row g-4">
+                    <div class="col-lg-4" data-aos="fade-up" data-aos-delay="100">
+                        <div class="card value-card h-100 text-center">
+                            <div class="card-body p-4">
+                                <i class="fas fa-eye fa-3x text-success mb-3"></i>
+                                <h5 class="fw-bold mb-3">Transparency</h5>
+                                <p class="text-muted">We provide clear, accurate data and open methodologies so you can trust our calculations and recommendations.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4" data-aos="fade-up" data-aos-delay="200">
+                        <div class="card value-card h-100 text-center">
+                            <div class="card-body p-4">
+                                <i class="fas fa-rocket fa-3x text-primary mb-3"></i>
+                                <h5 class="fw-bold mb-3">Innovation</h5>
+                                <p class="text-muted">We continuously improve our technology to provide the most accurate and user-friendly carbon tracking solutions.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4" data-aos="fade-up" data-aos-delay="300">
+                        <div class="card value-card h-100 text-center">
+                            <div class="card-body p-4">
+                                <i class="fas fa-hands-helping fa-3x text-warning mb-3"></i>
+                                <h5 class="fw-bold mb-3">Impact</h5>
+                                <p class="text-muted">Every feature we build is designed to create measurable positive impact on our planet's future.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Timeline -->
+        <section class="py-5">
+            <div class="container">
+                <div class="row mb-5">
+                    <div class="col-lg-8 mx-auto text-center">
+                        <h2 class="display-5 fw-bold mb-3" data-aos="fade-up">Our Journey</h2>
+                        <p class="lead text-muted" data-aos="fade-up" data-aos-delay="100">Milestones in our mission to combat climate change</p>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-8 mx-auto">
+                        <div class="timeline">
+                            <div class="timeline-item" data-aos="fade-right">
+                                <div class="timeline-marker bg-success"></div>
+                                <div class="timeline-content">
+                                    <h6 class="timeline-date">2023</h6>
+                                    <h5 class="fw-bold">Company Founded</h5>
+                                    <p class="text-muted">CarbonWise was established with the vision of making carbon tracking accessible to everyone.</p>
+                                    <div class="progress">
+                                        <div class="progress-bar bg-success" style="width: 25%"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="timeline-item" data-aos="fade-left">
+                                <div class="timeline-marker bg-primary"></div>
+                                <div class="timeline-content">
+                                    <h6 class="timeline-date">Early 2024</h6>
+                                    <h5 class="fw-bold">First Product Launch</h5>
+                                    <p class="text-muted">Released our core carbon calculator platform with basic tracking capabilities.</p>
+                                    <div class="progress">
+                                        <div class="progress-bar bg-primary" style="width: 50%"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="timeline-item" data-aos="fade-right">
+                                <div class="timeline-marker bg-warning"></div>
+                                <div class="timeline-content">
+                                    <h6 class="timeline-date">Mid 2024</h6>
+                                    <h5 class="fw-bold">AI Integration</h5>
+                                    <p class="text-muted">Integrated AI-powered recommendations and predictive analytics for better insights.</p>
+                                    <div class="progress">
+                                        <div class="progress-bar bg-warning" style="width: 75%"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="timeline-item" data-aos="fade-left">
+                                <div class="timeline-marker bg-info"></div>
+                                <div class="timeline-content">
+                                    <h6 class="timeline-date">2025</h6>
+                                    <h5 class="fw-bold">Enterprise Solutions</h5>
+                                    <p class="text-muted">Launched enterprise-grade solutions for businesses and organizations worldwide.</p>
+                                    <div class="progress">
+                                        <div class="progress-bar bg-info" style="width: 100%"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Team Section -->
+        <section class="py-5 bg-light">
+            <div class="container">
+                <div class="row mb-5">
+                    <div class="col-lg-8 mx-auto text-center">
+                        <h2 class="display-5 fw-bold mb-3" data-aos="fade-up">Meet Our Team</h2>
+                        <p class="lead text-muted" data-aos="fade-up" data-aos-delay="100">Passionate experts dedicated to environmental sustainability</p>
+                    </div>
+                </div>
+                <div class="row g-4">
+                    <div class="col-lg-4" data-aos="fade-up" data-aos-delay="100">
+                        <div class="card team-card h-100">
+                            <div class="card-body text-center p-4">
+                                <div class="team-avatar mb-3">
+                                    <i class="fas fa-user-circle fa-5x text-success"></i>
+                                </div>
+                                <h5 class="fw-bold mb-1">Dr. Sarah Chen</h5>
+                                <p class="text-muted mb-3">CEO & Co-Founder</p>
+                                <p class="small text-muted">Environmental scientist with 15+ years in climate research and sustainability technology.</p>
+                                <div class="social-links">
+                                    <a href="#" class="me-2"><i class="fab fa-linkedin"></i></a>
+                                    <a href="#" class="me-2"><i class="fab fa-twitter"></i></a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4" data-aos="fade-up" data-aos-delay="200">
+                        <div class="card team-card h-100">
+                            <div class="card-body text-center p-4">
+                                <div class="team-avatar mb-3">
+                                    <i class="fas fa-user-circle fa-5x text-primary"></i>
+                                </div>
+                                <h5 class="fw-bold mb-1">Alex Rodriguez</h5>
+                                <p class="text-muted mb-3">CTO & Co-Founder</p>
+                                <p class="small text-muted">Full-stack engineer specializing in data analytics and machine learning applications for climate tech.</p>
+                                <div class="social-links">
+                                    <a href="#" class="me-2"><i class="fab fa-linkedin"></i></a>
+                                    <a href="#" class="me-2"><i class="fab fa-github"></i></a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4" data-aos="fade-up" data-aos-delay="300">
+                        <div class="card team-card h-100">
+                            <div class="card-body text-center p-4">
+                                <div class="team-avatar mb-3">
+                                    <i class="fas fa-user-circle fa-5x text-warning"></i>
+                                </div>
+                                <h5 class="fw-bold mb-1">Maya Patel</h5>
+                                <p class="text-muted mb-3">Head of Sustainability</p>
+                                <p class="small text-muted">Sustainability consultant with expertise in corporate carbon accounting and ESG reporting.</p>
+                                <div class="social-links">
+                                    <a href="#" class="me-2"><i class="fab fa-linkedin"></i></a>
+                                    <a href="#" class="me-2"><i class="fab fa-twitter"></i></a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- CONTACT PAGE -->
+    <div id="contact" class="page-section">
+        <!-- Page Header -->
+        <section class="page-header py-5 mt-5">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-8 mx-auto text-center">
+                        <h1 class="display-4 fw-bold mb-3" data-aos="fade-up">Get In Touch</h1>
+                        <p class="lead text-muted" data-aos="fade-up" data-aos-delay="100">Ready to start your sustainability journey? We're here to help.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Contact Info -->
+        <section class="py-5">
+            <div class="container">
+                <div class="row g-4 mb-5">
+                    <div class="col-lg-4" data-aos="fade-up" data-aos-delay="100">
+                        <div class="contact-info-card text-center">
+                            <i class="fas fa-envelope fa-3x text-success mb-3"></i>
+                            <h5 class="fw-bold mb-2">Email Us</h5>
+                            <p class="text-muted mb-2">Drop us a line anytime</p>
+                            <a href="mailto:hello@carbonwise.com" class="text-success">hello@carbonwise.com</a>
+                        </div>
+                    </div>
+                    <div class="col-lg-4" data-aos="fade-up" data-aos-delay="200">
+                        <div class="contact-info-card text-center">
+                            <i class="fas fa-phone fa-3x text-primary mb-3"></i>
+                            <h5 class="fw-bold mb-2">Call Us</h5>
+                            <p class="text-muted mb-2">Mon-Fri 9AM-6PM PST</p>
+                            <a href="tel:+1234567890" class="text-success">+1 (234) 567-890</a>
+                        </div>
+                    </div>
+                    <div class="col-lg-4" data-aos="fade-up" data-aos-delay="300">
+                        <div class="contact-info-card text-center">
+                            <i class="fas fa-map-marker-alt fa-3x text-warning mb-3"></i>
+                            <h5 class="fw-bold mb-2">Visit Us</h5>
+                            <p class="text-muted mb-2">San Francisco, CA</p>
+                            <address class="text-success mb-0">123 Green Street<br>San Francisco, CA 94105</address>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Contact Form & Map -->
+        <section id="contact-form" class="py-5 bg-light">
+            <div class="container">
+                <div class="row g-5">
+                    <div class="col-lg-6" data-aos="fade-right">
+                        <div class="card shadow">
+                            <div class="card-body p-4">
+                                <h4 class="fw-bold mb-4">Send us a message</h4>
+                                <form id="contactForm" novalidate>
+                                    <div class="row g-3">
+                                        <div class="col-md-6">
+                                            <label for="firstName" class="form-label">First Name *</label>
+                                            <input type="text" class="form-control" id="firstName" required>
+                                            <div class="invalid-feedback">Please provide a first name.</div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label for="lastName" class="form-label">Last Name *</label>
+                                            <input type="text" class="form-control" id="lastName" required>
+                                            <div class="invalid-feedback">Please provide a last name.</div>
+                                        </div>
+                                        <div class="col-12">
+                                            <label for="email" class="form-label">Email Address *</label>
+                                            <input type="email" class="form-control" id="email" required>
+                                            <div class="invalid-feedback">Please provide a valid email.</div>
+                                        </div>
+                                        <div class="col-12">
+                                            <label for="company" class="form-label">Company</label>
+                                            <input type="text" class="form-control" id="company">
+                                        </div>
+                                        <div class="col-12">
+                                            <label for="subject" class="form-label">Subject *</label>
+                                            <select class="form-select" id="subject" required>
+                                                <option value="">Choose...</option>
+                                                <option value="general">General Inquiry</option>
+                                                <option value="sales">Sales</option>
+                                                <option value="support">Support</option>
+                                                <option value="partnership">Partnership</option>
+                                            </select>
+                                            <div class="invalid-feedback">Please select a subject.</div>
+                                        </div>
+                                        <div class="col-12">
+                                            <label for="message" class="form-label">Message *</label>
+                                            <textarea class="form-control" id="message" rows="5" required></textarea>
+                                            <div class="invalid-feedback">Please provide a message.</div>
+                                        </div>
+                                        <div class="col-12">
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" id="newsletter">
+                                                <label class="form-check-label" for="newsletter">
+                                                    Subscribe to our newsletter for sustainability tips and updates
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <div class="col-12">
+                                            <button type="submit" class="btn btn-success btn-lg w-100">
+                                                <i class="fas fa-paper-plane me-2"></i>Send Message
+                                            </button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6" data-aos="fade-left">
+                        <div class="card shadow h-100">
+                            <div class="card-body p-4">
+                                <h4 class="fw-bold mb-4">Find us here</h4>
+                                <div class="map-container mb-4">
+                                    <iframe 
+                                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3153.019284656596!2d-122.39619688468156!3d37.79267597975704!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8085809c6c8f4459%3A0xb10ed6d9b5050fa5!2sTransamerica%20Pyramid!5e0!3m2!1sen!2sus!4v1645123456789!5m2!1sen!2sus"
+                                        width="100%" 
+                                        height="300" 
+                                        style="border:0; border-radius: 0.5rem;" 
+                                        allowfullscreen="" 
+                                        loading="lazy">
+                                    </iframe>
+                                </div>
+                                <div class="office-hours">
+                                    <h6 class="fw-bold mb-3">Office Hours</h6>
+                                    <ul class="list-unstyled">
+                                        <li class="d-flex justify-content-between mb-2">
+                                            <span>Monday - Friday</span>
+                                            <span class="text-success">9:00 AM - 6:00 PM</span>
+                                        </li>
+                                        <li class="d-flex justify-content-between mb-2">
+                                            <span>Saturday</span>
+                                            <span class="text-success">10:00 AM - 4:00 PM</span>
+                                        </li>
+                                        <li class="d-flex justify-content-between">
+                                            <span>Sunday</span>
+                                            <span class="text-muted">Closed</span>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Newsletter Section -->
+        <section class="py-5">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-8 mx-auto text-center" data-aos="fade-up">
+                        <div class="newsletter-section">
+                            <i class="fas fa-leaf fa-3x text-success mb-3"></i>
+                            <h3 class="fw-bold mb-3">Stay Updated</h3>
+                            <p class="text-muted mb-4">Get the latest sustainability tips, product updates, and carbon reduction strategies delivered to your inbox.</p>
+                            <form class="newsletter-form" id="newsletterForm">
+                                <div class="row g-3">
+                                    <div class="col-md-8">
+                                        <input type="email" class="form-control form-control-lg" id="newsletterEmail" placeholder="Enter your email address" required>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <button type="submit" class="btn btn-success btn-lg w-100">
+                                            <i class="fas fa-paper-plane me-2"></i>Subscribe
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Social Media -->
+        <section class="py-5 bg-light">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-8 mx-auto text-center">
+                        <h4 class="fw-bold mb-4" data-aos="fade-up">Connect With Us</h4>
+                        <div class="social-media-links" data-aos="fade-up" data-aos-delay="100">
+                            <a href="#" class="social-link">
+                                <i class="fab fa-twitter"></i>
+                                <span>Twitter</span>
+                            </a>
+                            <a href="#" class="social-link">
+                                <i class="fab fa-linkedin"></i>
+                                <span>LinkedIn</span>
+                            </a>
+                            <a href="#" class="social-link">
+                                <i class="fab fa-facebook"></i>
+                                <span>Facebook</span>
+                            </a>
+                            <a href="#" class="social-link">
+                                <i class="fab fa-instagram"></i>
+                                <span>Instagram</span>
+                            </a>
+                            <a href="#" class="social-link">
+                                <i class="fab fa-youtube"></i>
+                                <span>YouTube</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer py-5">
+        <div class="container">
+            <div class="row g-4">
+                <div class="col-lg-4">
+                    <h5 class="fw-bold mb-3">
+                        <i class="fas fa-leaf text-success me-2"></i>CarbonWise
+                    </h5>
+                    <p class="text-muted">Making sustainability accessible through data-driven insights and carbon tracking solutions.</p>
+                    <div class="social-links">
+                        <a href="#" class="me-3"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="me-3"><i class="fab fa-linkedin"></i></a>
+                        <a href="#" class="me-3"><i class="fab fa-facebook"></i></a>
+                        <a href="#" class="me-3"><i class="fab fa-instagram"></i></a>
+                    </div>
+                </div>
+                <div class="col-lg-2">
+                    <h6 class="fw-bold mb-3">Product</h6>
+                    <ul class="list-unstyled">
+                        <li><a href="#" onclick="showPage('features')" class="text-muted">Features</a></li>
+                        <li><a href="#" class="text-muted">Pricing</a></li>
+                        <li><a href="#" class="text-muted">API</a></li>
+                        <li><a href="#" class="text-muted">Documentation</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-2">
+                    <h6 class="fw-bold mb-3">Company</h6>
+                    <ul class="list-unstyled">
+                        <li><a href="#" onclick="showPage('about')" class="text-muted">About</a></li>
+                        <li><a href="#" class="text-muted">Blog</a></li>
+                        <li><a href="#" class="text-muted">Careers</a></li>
+                        <li><a href="#" onclick="showPage('contact')" class="text-muted">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-2">
+                    <h6 class="fw-bold mb-3">Resources</h6>
+                    <ul class="list-unstyled">
+                        <li><a href="#" class="text-muted">Help Center</a></li>
+                        <li><a href="#" class="text-muted">Privacy</a></li>
+                        <li><a href="#" class="text-muted">Terms</a></li>
+                        <li><a href="#" class="text-muted">Status</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-2">
+                    <h6 class="fw-bold mb-3">Subscribe</h6>
+                    <p class="text-muted small">Get sustainability tips and updates.</p>
+                    <div class="input-group input-group-sm">
+                        <input type="email" class="form-control" placeholder="Email">
+                        <button class="btn btn-success" type="button">
+                            <i class="fas fa-paper-plane"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <hr class="my-4">
+            <div class="row">
+                <div class="col-md-6">
+                    <p class="text-muted small mb-0">&copy; 2025 CarbonWise. All rights reserved.</p>
+                </div>
+                <div class="col-md-6 text-md-end">
+                    <p class="text-muted small mb-0">Made with <i class="fas fa-heart text-danger"></i> for the planet</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    
+    <script>
+        // Page Navigation
+        function showPage(pageId) {
+            // Hide all pages
+            const pages = document.querySelectorAll('.page-section');
+            pages.forEach(page => {
+                page.classList.remove('active');
+            });
+            
+            // Show selected page
+            document.getElementById(pageId).classList.add('active');
+            
+            // Update navigation
+            const navLinks = document.querySelectorAll('.nav-link');
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+            });
+            
+            // Add active class to current page link
+            const activeLink = document.querySelector(`[onclick="showPage('${pageId}')"]`);
+            if (activeLink && activeLink.classList.contains('nav-link')) {
+                activeLink.classList.add('active');
+            }
+            
+            // Scroll to top
+            window.scrollTo(0, 0);
+            
+            // Reinitialize AOS for new page
+            setTimeout(() => {
+                AOS.refresh();
+            }, 100);
+            
+            // Initialize charts if on features page
+            if (pageId === 'features') {
+                setTimeout(() => {
+                    initCharts();
+                }, 200);
+            }
+        }
+
+        // Initialize AOS (Animate On Scroll)
+        document.addEventListener('DOMContentLoaded', function() {
+            AOS.init({
+                duration: 800,
+                easing: 'ease-in-out',
+                once: true,
+                offset: 100
+            });
+
+            // Initialize all functionality
+            initCounters();
+            initCharts();
+            initFormValidation();
+            initSmoothScrolling();
+            initNavbarEffects();
         });
 
-        const data = await response.json();
-        clearInterval(progressInterval);
-        progressBar.style.width = "100%";
-        progressText.textContent = "100%";
+        // Animated Counters
+        function initCounters() {
+            const counters = document.querySelectorAll('.counter');
+            
+            const observerOptions = {
+                threshold: 0.5
+            };
 
-        setTimeout(() => {
-          progressSection.classList.add("hidden");
-          if (data.success) {
-            resultSection.classList.remove("hidden");
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        animateCounter(entry.target);
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, observerOptions);
 
-            if (data.image_url) {
-              resultImage.src = data.image_url;
-              resultImage.alt = data.product_name;
-              resultImage.classList.remove("hidden");
+            counters.forEach(counter => {
+                observer.observe(counter);
+            });
+        }
+
+        function animateCounter(element) {
+            const target = parseInt(element.dataset.target);
+            const duration = 2000;
+            const step = target / (duration / 16);
+            let current = 0;
+
+            const timer = setInterval(() => {
+                current += step;
+                if (current >= target) {
+                    element.textContent = target.toLocaleString();
+                    clearInterval(timer);
+                } else {
+                    element.textContent = Math.floor(current).toLocaleString();
+                }
+            }, 16);
+        }
+
+        // Carbon Calculator Demo
+        function calculateCarbon() {
+            const productInput = document.getElementById('productInput');
+            const carbonResult = document.getElementById('carbonResult');
+            const carbonValue = document.getElementById('carbonValue');
+            
+            const product = productInput.value.trim();
+            
+            if (!product) {
+                alert('Please enter a product name.');
+                return;
             }
 
-            resultProduct.textContent = data.product_name || "Unknown Product";
-            resultMaterial.textContent = "Material: " + (data.material || "Unknown");
-            resultWeight.textContent = data.weight_value ? 
-              `Weight: ${data.weight_value} ${data.weight_unit || ""}` : "";
-            resultCarbon.textContent = (data.carbon_footprint ? data.carbon_footprint.toFixed(2) : "N/A") + " kg CO₂";
+            // Show loading state
+            const button = event.target;
+            const originalText = button.innerHTML;
+            button.innerHTML = '<span class="loading"></span> Calculating...';
+            button.disabled = true;
 
-            let rec = "Low carbon footprint - good environmental choice";
-            if (data.carbon_footprint > 20) {
-              rec = "High carbon footprint - consider eco-friendly alternatives";
-            } else if (data.carbon_footprint > 10) {
-              rec = "Moderate carbon footprint - look for greener options";
+            // Simulate calculation delay
+            setTimeout(() => {
+                // Demo calculation based on product type
+                let carbonFootprint = calculateDemoCarbon(product.toLowerCase());
+                
+                carbonValue.textContent = carbonFootprint;
+                carbonResult.style.display = 'block';
+                
+                // Reset button
+                button.innerHTML = originalText;
+                button.disabled = false;
+                
+                // Animate result
+                carbonResult.classList.add('fade-in-up');
+            }, 1500);
+        }
+
+        function calculateDemoCarbon(product) {
+            const carbonData = {
+                'plastic': 2.5,
+                'chair': 15.2,
+                'plastic chair': 18.7,
+                'cotton': 1.8,
+                't-shirt': 8.5,
+                'cotton t-shirt': 10.3,
+                'laptop': 450.2,
+                'computer': 425.8,
+                'car': 4500.0,
+                'phone': 85.3,
+                'smartphone': 89.1,
+                'bottle': 0.5,
+                'plastic bottle': 0.8,
+                'jeans': 33.4,
+                'shoes': 14.7,
+                'book': 1.2
+            };
+
+            // Check for exact matches first
+            if (carbonData[product]) {
+                return carbonData[product];
             }
-            resultRecommendation.textContent = rec;
 
-          } else {
-            errorSection.classList.remove("hidden");
-            errorMessage.textContent = data.error || "Failed to analyze product";
-          }
-        }, 500);
+            // Check for partial matches
+            for (let key in carbonData) {
+                if (product.includes(key) || key.includes(product)) {
+                    return carbonData[key];
+                }
+            }
 
-      } catch (err) {
-        clearInterval(progressInterval);
-        progressSection.classList.add("hidden");
-        errorSection.classList.remove("hidden");
-        errorMessage.textContent = "Network error - please check if the backend server is running";
-        console.error("Analysis error:", err);
-      }
-    });
-  </script>
+            // Default calculation for unknown products
+            return (Math.random() * 50 + 5).toFixed(1);
+        }
+
+        // Charts Initialization
+        function initCharts() {
+            // Emissions Chart
+            const emissionsCtx = document.getElementById('emissionsChart');
+            if (emissionsCtx && !emissionsCtx.chart) {
+                emissionsCtx.chart = new Chart(emissionsCtx, {
+                    type: 'doughnut',
+                    data: {
+                        labels: ['Transportation', 'Energy', 'Food', 'Waste', 'Other'],
+                        datasets: [{
+                            data: [35, 28, 22, 10, 5],
+                            backgroundColor: [
+                                '#28a745',
+                                '#20c997',
+                                '#ffc107',
+                                '#17a2b8',
+                                '#6c757d'
+                            ],
+                            borderWidth: 0
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                position: 'bottom',
+                                labels: {
+                                    padding: 20,
+                                    usePointStyle: true
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+
+            // Progress Chart
+            const progressCtx = document.getElementById('progressChart');
+            if (progressCtx && !progressCtx.chart) {
+                progressCtx.chart = new Chart(progressCtx, {
+                    type: 'line',
+                    data: {
+                        labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+                        datasets: [{
+                            label: 'CO₂ Emissions (kg)',
+                            data: [450, 420, 380, 350, 320, 280],
+                            borderColor: '#28a745',
+                            backgroundColor: 'rgba(40, 167, 69, 0.1)',
+                            borderWidth: 3,
+                            fill: true,
+                            tension: 0.4
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                display: false
+                            }
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                grid: {
+                                    color: 'rgba(0,0,0,0.1)'
+                                }
+                            },
+                            x: {
+                                grid: {
+                                    display: false
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+        }
+
+        // Form Validation
+        function initFormValidation() {
+            const forms = document.querySelectorAll('form[novalidate]');
+            
+            forms.forEach(form => {
+                form.addEventListener('submit', function(event) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                    
+                    if (form.checkValidity()) {
+                        handleFormSubmit(form);
+                    }
+                    
+                    form.classList.add('was-validated');
+                });
+            });
+
+            // Newsletter forms
+            const newsletterForms = document.querySelectorAll('#newsletterForm, .newsletter-form');
+            newsletterForms.forEach(form => {
+                form.addEventListener('submit', function(event) {
+                    event.preventDefault();
+                    handleNewsletterSubmit(form);
+                });
+            });
+        }
+
+        function handleFormSubmit(form) {
+            const formId = form.id;
+            const submitButton = form.querySelector('button[type="submit"]');
+            const originalText = submitButton.innerHTML;
+            
+            // Show loading state
+            submitButton.innerHTML = '<span class="loading"></span> Sending...';
+            submitButton.disabled = true;
+            
+            // Simulate form submission
+            setTimeout(() => {
+                showSuccessMessage(form, 'Thank you! Your message has been sent successfully. We\'ll get back to you within 24 hours.');
+                form.reset();
+                form.classList.remove('was-validated');
+                
+                // Reset button
+                submitButton.innerHTML = originalText;
+                submitButton.disabled = false;
+            }, 2000);
+        }
+
+        function handleNewsletterSubmit(form) {
+            const emailInput = form.querySelector('input[type="email"]');
+            const submitButton = form.querySelector('button[type="submit"]');
+            const originalText = submitButton.innerHTML;
+            
+            if (!emailInput.value || !emailInput.checkValidity()) {
+                emailInput.classList.add('is-invalid');
+                return;
+            }
+            
+            emailInput.classList.remove('is-invalid');
+            
+            // Show loading state
+            submitButton.innerHTML = '<span class="loading"></span>';
+            submitButton.disabled = true;
+            
+            // Simulate subscription
+            setTimeout(() => {
+                showSuccessMessage(form, 'Successfully subscribed! Welcome to our sustainability community.');
+                emailInput.value = '';
+                
+                // Reset button
+                submitButton.innerHTML = originalText;
+                submitButton.disabled = false;
+            }, 1500);
+        }
+
+        function showSuccessMessage(form, message) {
+            const alert = document.createElement('div');
+            alert.className = 'alert alert-success alert-dismissible fade show mt-3';
+            alert.innerHTML = `
+                <i class="fas fa-check-circle me-2"></i>
+                ${message}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            `;
+            
+            form.parentNode.appendChild(alert);
+            
+            // Auto-remove after 5 seconds
+            setTimeout(() => {
+                if (alert.parentNode) {
+                    alert.remove();
+                }
+            }, 5000);
+        }
+
+        // Smooth Scrolling
+        function initSmoothScrolling() {
+            const links = document.querySelectorAll('a[href^="#"]');
+            
+            links.forEach(link => {
+                link.addEventListener('click', function(event) {
+                    const targetId = this.getAttribute('href');
+                    const targetElement = document.querySelector(targetId);
+                    
+                    if (targetElement) {
+                        event.preventDefault();
+                        
+                        const offsetTop = targetElement.offsetTop - 80;
+                        
+                        window.scrollTo({
+                            top: offsetTop,
+                            behavior: 'smooth'
+                        });
+                    }
+                });
+            });
+        }
+
+        // Navbar Effects
+        function initNavbarEffects() {
+            const navbar = document.querySelector('.navbar');
+            
+            window.addEventListener('scroll', function() {
+                if (window.scrollY > 50) {
+                    navbar.style.background = 'rgba(255, 255, 255, 0.98)';
+                    navbar.style.boxShadow = '0 2px 20px rgba(0, 0, 0, 0.15)';
+                } else {
+                    navbar.style.background = 'rgba(255, 255, 255, 0.95)';
+                    navbar.style.boxShadow = '0 2px 20px rgba(0, 0, 0, 0.1)';
+                }
+            });
+        }
+    </script>
 </body>
 </html>
