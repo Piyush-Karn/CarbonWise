@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>CarbonWise</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body class="min-h-screen w-full bg-white relative">
+
+  <!-- Amber Glow Background -->
+  <div class="absolute inset-0 z-0"
+    style="background-image: radial-gradient(125% 125% at 50% 90%, #ffffff 40%, #f59e0b 100%); background-size: 100% 100%;">
+  </div>
+
+  <div class="relative z-10">
+    <!-- Header -->
+    <header class="relative z-10 px-6 py-4">
+      <nav class="max-w-7xl mx-auto flex items-center justify-between">
+        <div class="flex items-center space-x-2 group cursor-pointer hover:scale-105 transition-transform duration-300">
+          <i data-lucide="leaf" class="w-8 h-8 text-emerald-600"></i>
+          <span class="text-2xl font-bold bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent">
+            CarbonWise
+          </span>
+        </div>
+      </nav>
+    </header>
+
+    <!-- Main Content -->
+    <main class="relative z-10">
+      <div class="relative z-10 max-w-7xl mx-auto px-6 py-20">
+        <div class="text-center mb-16">
+          <h1 class="text-5xl md:text-7xl font-bold mb-6 leading-tight">
+            <span class="bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 bg-clip-text text-transparent">
+              Shop Smarter, 
+            </span>
+            <span class="bg-gradient-to-r from-emerald-600 via-teal-600 to-cyan-600 bg-clip-text text-transparent">
+              Planet Happier
+            </span>
+          </h1>
+
+          <p class="text-xl text-gray-600 mb-12 max-w-3xl mx-auto leading-relaxed">
+            Discover the hidden carbon footprint of your online purchases. Get AI-powered green recommendations.
+          </p>
+
+          <!-- URL Input Section -->
+          <div class="max-w-2xl mx-auto mb-16">
+            <div class="bg-white/80 backdrop-blur-lg rounded-2xl p-8 shadow-2xl border border-white/20">
+              <h2 class="text-2xl font-bold text-gray-800 mb-6">
+                Check Any Product's Carbon Impact
+              </h2>
+              <div class="flex flex-col sm:flex-row gap-4">
+                <div class="flex-1">
+                  <input id="urlInput" type="url"
+                    placeholder="Paste Amazon product URL here..."
+                    class="w-full px-6 py-4 rounded-xl border-2 border-gray-200 focus:border-emerald-500 focus:outline-none transition-all duration-300 text-gray-700 bg-white/90"/>
+                </div>
+                <button id="analyzeBtn"
+                  class="px-8 py-4 bg-gradient-to-r from-emerald-600 to-teal-600 text-white rounded-xl font-semibold flex items-center justify-center space-x-2">
+                  <i data-lucide="search" class="w-5 h-5"></i>
+                  <span>Analyze Impact</span>
+                </button>
+              </div>
+
+              <!-- Loading Progress -->
+              <div id="progressSection" class="hidden mt-6 space-y-4">
+                <div class="flex justify-between text-sm text-gray-600">
+                  <span>Analyzing product...</span>
+                  <span id="progressText">0%</span>
+                </div>
+                <div class="w-full bg-gray-200 rounded-full h-2">
+                  <div id="progressBar" class="h-2 bg-gradient-to-r from-emerald-500 to-teal-500 rounded-full transition-all duration-300"
+                    style="width: 0%;">
+                  </div>
+                </div>
+              </div>
+
+              <!-- Results -->
+              <div id="resultSection" class="hidden mt-8 p-6 bg-gradient-to-r from-red-50 to-orange-50 rounded-xl border border-red-200">
+                <div class="flex items-center justify-between mb-4">
+                  <div class="flex-1">
+                    <p class="text-sm text-gray-600 mb-1">Analysis Complete:</p>
+                    <div class="flex items-start space-x-3">
+                      <img id="resultImage" src="" alt="" class="w-16 h-16 object-cover rounded-lg border hidden"/>
+                      <div>
+                        <p id="resultProduct" class="font-semibold text-gray-800 mb-1"></p>
+                        <p id="resultMaterial" class="text-xs text-blue-600 mb-1"></p>
+                        <p id="resultWeight" class="text-xs text-purple-600"></p>
+                      </div>
+                    </div>
+                    <p id="resultRecommendation" class="text-xs text-emerald-600 mt-2"></p>
+                  </div>
+                  <div class="text-right">
+                    <p id="resultCarbon" class="text-2xl font-bold text-red-600"></p>
+                    <p class="text-sm text-gray-600">Carbon footprint</p>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Error Display -->
+              <div id="errorSection" class="hidden mt-8 p-6 bg-red-50 rounded-xl border border-red-200">
+                <div class="flex items-center space-x-3">
+                  <div class="w-8 h-8 bg-red-500 rounded-full flex items-center justify-center">
+                    <span class="text-white text-sm font-bold">!</span>
+                  </div>
+                  <div>
+                    <p class="font-semibold text-red-800">Analysis Failed</p>
+                    <p id="errorMessage" class="text-sm text-red-600"></p>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- Script -->
+  <script>
+    lucide.createIcons();
+
+    const API_BASE_URL = "http://localhost:8000";
+    const urlInput = document.getElementById("urlInput");
+    const analyzeBtn = document.getElementById("analyzeBtn");
+    const progressSection = document.getElementById("progressSection");
+    const progressText = document.getElementById("progressText");
+    const progressBar = document.getElementById("progressBar");
+    const resultSection = document.getElementById("resultSection");
+    const errorSection = document.getElementById("errorSection");
+    const resultImage = document.getElementById("resultImage");
+    const resultProduct = document.getElementById("resultProduct");
+    const resultMaterial = document.getElementById("resultMaterial");
+    const resultWeight = document.getElementById("resultWeight");
+    const resultRecommendation = document.getElementById("resultRecommendation");
+    const resultCarbon = document.getElementById("resultCarbon");
+    const errorMessage = document.getElementById("errorMessage");
+
+    analyzeBtn.addEventListener("click", async () => {
+      const url = urlInput.value.trim();
+      if (!url) return;
+
+      progressSection.classList.remove("hidden");
+      resultSection.classList.add("hidden");
+      errorSection.classList.add("hidden");
+      progressBar.style.width = "0%";
+      progressText.textContent = "0%";
+
+      let progress = 0;
+      const progressInterval = setInterval(() => {
+        progress = Math.min(progress + Math.random() * 15, 85);
+        progressBar.style.width = progress + "%";
+        progressText.textContent = Math.round(progress) + "%";
+      }, 300);
+
+      try {
+        const response = await fetch(`${API_BASE_URL}/analyze`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ url })
+        });
+
+        const data = await response.json();
+        clearInterval(progressInterval);
+        progressBar.style.width = "100%";
+        progressText.textContent = "100%";
+
+        setTimeout(() => {
+          progressSection.classList.add("hidden");
+          if (data.success) {
+            resultSection.classList.remove("hidden");
+
+            if (data.image_url) {
+              resultImage.src = data.image_url;
+              resultImage.alt = data.product_name;
+              resultImage.classList.remove("hidden");
+            }
+
+            resultProduct.textContent = data.product_name || "Unknown Product";
+            resultMaterial.textContent = "Material: " + (data.material || "Unknown");
+            resultWeight.textContent = data.weight_value ? 
+              `Weight: ${data.weight_value} ${data.weight_unit || ""}` : "";
+            resultCarbon.textContent = (data.carbon_footprint ? data.carbon_footprint.toFixed(2) : "N/A") + " kg CO₂";
+
+            let rec = "Low carbon footprint - good environmental choice";
+            if (data.carbon_footprint > 20) {
+              rec = "High carbon footprint - consider eco-friendly alternatives";
+            } else if (data.carbon_footprint > 10) {
+              rec = "Moderate carbon footprint - look for greener options";
+            }
+            resultRecommendation.textContent = rec;
+
+          } else {
+            errorSection.classList.remove("hidden");
+            errorMessage.textContent = data.error || "Failed to analyze product";
+          }
+        }, 500);
+
+      } catch (err) {
+        clearInterval(progressInterval);
+        progressSection.classList.add("hidden");
+        errorSection.classList.remove("hidden");
+        errorMessage.textContent = "Network error - please check if the backend server is running";
+        console.error("Analysis error:", err);
+      }
+    });
+  </script>
+</body>
+</html>
