@@ -136,7 +136,6 @@ Distributed under the MIT License. See [`LICENSE`](LICENSE) for more information
 
 **EcoCoders**
 - 📩 Email: ujjwal3901@gmail.com
-- 🌐 GitHub: [@Piyush-Karn](https://github.com/Piyush-Karn)
 
 **Project Link:** [https://github.com/Piyush-Karn/CarbonWise](https://github.com/Piyush-Karn/CarbonWise)
 
