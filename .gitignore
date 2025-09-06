@@ -1,1 +1,3 @@
 /carbonwise-backend/venv
+/carbonwise-backend/.env
+__pycache__/
